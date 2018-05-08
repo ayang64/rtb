@@ -1,0 +1,6 @@
+
+{
+	"id": "12345",
+	"tmax": 100,
+	"curs": [ "USD", "LIR", "YEN", "FOO", "BAR" ]
+}
