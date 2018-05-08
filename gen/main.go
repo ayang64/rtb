@@ -3,17 +3,52 @@ package main
 import (
 	"fmt"
 	"github.com/ayang64/rtb"
-	"log"
 	"reflect"
 	"strings"
 )
+
+type Table struct {
+	Name    string
+	Columns []Column
+}
+
+func (t *Table) String() string {
+	if t == nil {
+		return "*nil*"
+	}
+
+	// determine max lenght of field name.
+	max := func() int {
+		m := -1
+		for _, col := range t.Columns {
+			if len(col.Name) > m {
+				m = len(col.Name)
+			}
+		}
+		return m
+	}()
+
+	rc := fmt.Sprintf("drop table if exists %q cascade;\n", t.Name) + fmt.Sprintf("create table %q (\n", t.Name) + fmt.Sprintf("\t%-*.*s   serial,\n", max, max, "id")
+
+	for i, col := range t.Columns {
+		rc += fmt.Sprintf("\t%-*.*s   %s", max, max, col.Name, col.Type)
+		if i < len(t.Columns)-1 {
+			rc += fmt.Sprintf(",")
+		}
+		rc += fmt.Sprintf("\n")
+	}
+	rc += fmt.Sprintf(");\n")
+
+	return rc
+}
 
 type Column struct {
 	Name string
 	Type string
 }
 
-func GenerateTable(name, v interface{}) error {
+func GenerateTable(name string, v interface{}) (*Table, error) {
+
 	typeMap := map[string]string{
 		"int":    "integer",
 		"string": "text",
@@ -22,7 +57,7 @@ func GenerateTable(name, v interface{}) error {
 	t := reflect.TypeOf(v)
 
 	if t.Kind() != reflect.Struct {
-		return fmt.Errorf("type %q is not a struct", t.Name())
+		return nil, fmt.Errorf("type %q is not a struct", t.Name())
 	}
 
 	var cols []Column
@@ -59,36 +94,12 @@ func GenerateTable(name, v interface{}) error {
 		cols = append(cols, Column{Name: r, Type: colType})
 	}
 
-	// determine max lenght of field name.
-	max := func() int {
-		m := -1
-		for i := range cols {
-			if len(cols[i].Name) > m {
-				m = len(cols[i].Name)
-			}
-		}
-		return m
-	}()
-
-	fmt.Printf("drop table if exists %q cascade;\n", name)
-	fmt.Printf("create table %q (\n", name)
-	fmt.Printf("\t%-*.*s   serial,\n", max, max, "id")
-	for i := range cols {
-		fmt.Printf("\t%-*.*s   %s", max, max, cols[i].Name, cols[i].Type)
-		if i < len(cols)-1 {
-			fmt.Printf(",")
-		}
-		fmt.Printf("\n")
-	}
-	fmt.Printf(");\n")
-
-	return nil
+	return &Table{Name: name, Columns: cols}, nil
 }
 
 func main() {
-	if err := GenerateTable("bid_request", []int{1}[0]); err != nil {
-		log.Fatalf("%v", err)
-	}
-	GenerateTable("bid_request", rtb.BidRequest{})
+	br, _ := GenerateTable("bid_request", rtb.BidRequest{})
+
+	fmt.Printf("%s", br)
 	GenerateTable("offer", rtb.Offer{})
 }
