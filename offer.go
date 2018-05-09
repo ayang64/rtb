@@ -1,5 +1,9 @@
 package rtb
 
+import (
+	"encoding/json"
+)
+
 type Offer struct {
 	Item    []Item      `json:"item"`    // object array; required Array of “Item” objects (at least one) that constitute the set of goods being offered for sale.
 	Package int         `json:"package"` // integer; default 0 Flag to indicate if the Exchange can verify that the items offered represent all of the items available in context (e.g., all impressions on a web page, all video spots such as pre/mid/post roll) to support roadblocking, where 0 = no or unknown, 1 = yes.
@@ -18,7 +22,7 @@ func (o *Offer) UnmarshalJSON(d []byte) error {
 		return err
 	}
 
-	*br = Offer(a)
+	*o = Offer(a)
 
 	return nil
 }
