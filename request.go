@@ -6,7 +6,7 @@ import (
 
 type unk struct{}
 
-type BidRequest struct {
+type Request struct {
 	Id          string      `json:"id" col:"bidid,uuid"` // required -  Unique ID of the bid request; provided by the exchange.
 	Test        int         `json:"test,omitempty"`      // default 0 -  Indicator of test mode in which auctions are not billable, where 0 = live mode, 1 = test mode.
 	TMax        *int        `json:"tmax,omitempty"`      // Maximum time in milliseconds the exchange allows for bids to be receivedincluding Internet latency to avoid timeout. This value supersedes any a priori guidance from the exchange.
@@ -20,8 +20,8 @@ type BidRequest struct {
 	Ext         interface{} `json:"ext"`                 // ext object Optional exchange-specific extensions.
 }
 
-func (br *BidRequest) UnmarshalJSON(d []byte) error {
-	type alias BidRequest
+func (r *Request) UnmarshalJSON(d []byte) error {
+	type alias Request
 
 	a := alias{
 		Test:        0,
@@ -33,7 +33,7 @@ func (br *BidRequest) UnmarshalJSON(d []byte) error {
 		return err
 	}
 
-	*br = BidRequest(a)
+	*r = Request(a)
 
 	return nil
 }
