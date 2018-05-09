@@ -15,7 +15,7 @@ type BidRequest struct {
 	Wcurs       int         `json:"wcurs"`               // wcurs integer; default 0 Flag that determines the restriction interpretation of the “curs” array, where 0 = block list, 1 = whitelist.  seats string array Restriction list of buyer seats for bidding on this item. Knowledge of buyer’s customers and their seat IDs must be coordinated between parties a priori. Omission implies no restrictions.
 	Wseats      int         `json:"wseats"`              // wseats integer; default 0 Flag that determines the restriction interpretation of the “seats” array, where 0 = block list, 1 = whitelist.
 	Source      Source      `json:"source"`              // source object A “Source” object that provides data about the inventory source and which entity makes the final decision.
-	Offer       unk         `json:"offer"`               // offer object; required An “Offer” object that conveys the item(s) being offered for sale.
+	Offer       Offer       `json:"offer"`               // offer object; required An “Offer” object that conveys the item(s) being offered for sale.
 	Domain      unk         `json:"domain"`              // domain object; recommended Layer-4 domain object structure that provides context for the items being offered (e.g., user, device, site or app, etc.) conforming to the specification and version referenced in “openrtb.domainspec” and “openrtb.domainver”.
 	Ext         interface{} `json:"ext"`                 // ext object Optional exchange-specific extensions.
 }
