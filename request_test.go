@@ -6,9 +6,8 @@ import (
 	"testing"
 )
 
-func TestUnmarshalBidRequest(t *testing.T) {
-
-	inf, err := os.Open("bid-request.json")
+func TestUnmarshalRequest(t *testing.T) {
+	inf, err := os.Open("test-fixtures/bid-request.json")
 
 	if err != nil {
 		t.Fatalf("%v", err)
@@ -17,7 +16,7 @@ func TestUnmarshalBidRequest(t *testing.T) {
 
 	d := json.NewDecoder(inf)
 
-	req := BidRequest{}
+	req := Request{}
 	if err := d.Decode(&req); err != nil {
 		t.Fatalf("%v", err)
 		t.FailNow()
