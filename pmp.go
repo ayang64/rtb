@@ -6,8 +6,9 @@ import (
 
 type Pmp struct {
 	Private int         `json:"private"` // private integer; default 0 Indicator of auction eligibility to seats named in “Deal” objects, where 0 = all bids are accepted, 1 = bids are restricted to the deals specified and the terms thereof.
-	Deal    Deal        `json:"deal"`    // deal object array Array of “Deal” objects that convey special terms applicable to this item.
 	Ext     interface{} `json:"ext"`     // ext object Optional exchange-specific extensions.
+
+	Deal `json:"deal"` // deal object array Array of “Deal” objects that convey special terms applicable to this item.
 }
 
 func (p *Pmp) UnmarshalJSON(d []byte) error {
